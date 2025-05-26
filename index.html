@@ -3,52 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mini Tes Sehatkah Jiwamu?</title>
+  <title>Mini Tes: Sehatkah Mentalku?</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #f0f8ff;
+      background: linear-gradient(to bottom right, #cce7f2, #e0f7fa);
       color: #333;
       padding: 20px;
-      max-width: 700px;
+      max-width: 800px;
       margin: auto;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
-      color: #2b7a78;
+      color: #005f73;
+      margin-bottom: 5px;
     }
-    p {
+    h2 {
       text-align: center;
+      color: #0a9396;
+      font-size: 1em;
+      margin-top: 0;
+    }
+    p.intro {
+      text-align: center;
+      font-size: 0.95em;
+      margin-top: 5px;
     }
     .question {
-      margin: 15px 0;
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
+      margin: 20px 0;
+      padding: 15px;
+      background: #f0f8ff;
+      border-radius: 8px;
     }
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
-    input[type="number"] {
-      width: 60px;
-      padding: 5px;
+    .scale {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .scale span {
+      font-size: 0.9em;
+      color: #555;
+    }
+    .scale input[type="range"] {
+      width: 100%;
+      margin: 0 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       font-size: 1em;
     }
     button {
-      background-color: #2b7a78;
+      background-color: #0a9396;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border-radius: 8px;
       font-size: 1em;
       cursor: pointer;
       display: block;
-      margin: 20px auto;
+      margin: 30px auto;
     }
     .result {
       margin-top: 30px;
       padding: 15px;
-      border: 2px solid #2b7a78;
+      border: 2px solid #0a9396;
       border-radius: 8px;
       background: #e0f7fa;
       text-align: center;
@@ -66,16 +93,19 @@
       font-weight: bold;
     }
     footer {
-      margin-top: 40px;
+      margin-top: 50px;
       text-align: center;
-      font-size: 0.9em;
-      color: #777;
+      font-size: 0.85em;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>Mini Tes "Sehatkah Jiwamu?"</h1>
-  <p>Isi nilai 1–5 sesuai dengan seberapa sering kamu merasakannya (1 = Tidak Pernah, 5 = Sangat Sering)</p>
+  <h1>Mini Tes: Sehatkah Mentalku?</h1>
+  <h2>Oleh: Rumah Terapi Sameera</h2>
+  <p class="intro">Isi nama kamu dulu ya!</p>
+  <input type="text" id="nama" placeholder="Masukkan nama kamu...">
+  <p class="intro">Pilih nilai 1–5 di setiap pertanyaan, sesuai dengan seberapa sering kamu merasakannya.<br>(1 = Tidak Pernah, 5 = Sangat Sering)</p>
 
   <form id="miniTesForm">
     <div id="questions"></div>
@@ -87,7 +117,8 @@
   <a class="whatsapp-link" href="https://wa.me/628992666096" target="_blank">Konsultasi Gratis via WhatsApp</a>
 
   <footer>
-    Rumah Terapi Sameera • Berani Menuju Pulih
+    Tes ini bukanlah diagnosis klinis, melainkan refleksi pribadi.<br>
+    Alamat: Jl. Ahmad Karim No 18 RT 011 Koto Panjang, Kota Padang Panjang, Sumatera Barat
   </footer>
 
   <script>
@@ -114,33 +145,40 @@
       questionContainer.innerHTML += `
         <div class="question">
           <label>${i + 1}. ${q}</label>
-          <input type="number" id="q${i + 1}" min="1" max="5" required>
+          <div class="scale">
+            <span>1 (Tidak Pernah)</span>
+            <input type="range" id="q${i + 1}" min="1" max="5" value="3">
+            <span>5 (Sangat Sering)</span>
+          </div>
         </div>
       `;
     });
 
     function hitungSkor() {
+      const nama = document.getElementById("nama").value.trim();
+      if (!nama) {
+        alert("Tolong masukkan nama dulu ya!");
+        document.getElementById("nama").focus();
+        return;
+      }
+
       let total = 0;
       for (let i = 1; i <= 15; i++) {
-        let val = parseInt(document.getElementById("q" + i).value);
-        if (isNaN(val) || val < 1 || val > 5) {
-          alert("Isi semua nilai dengan angka 1-5!");
-          return;
-        }
-        total += val;
+        total += parseInt(document.getElementById("q" + i).value);
       }
 
       let hasil = "";
       if (total >= 15 && total <= 29) {
-        hasil = "Kamu cenderung stabil secara emosional. Mungkin hanya mengalami stres ringan yang masih wajar. Tetap perhatikan sinyal dari tubuh dan pikiranmu.";
+        hasil = `Halo, ${nama}! Kamu cenderung stabil secara emosional. Mungkin hanya mengalami stres ringan yang masih wajar. Tetap perhatikan sinyal dari tubuh dan pikiranmu.`;
       } else if (total >= 30 && total <= 49) {
-        hasil = "Ada kemungkinan kamu menyimpan luka batin yang belum sembuh. Mungkin kamu sering merasa 'baik-baik saja' di luar, tapi di dalam menyimpan perasaan yang belum sempat diproses.";
+        hasil = `Halo, ${nama}! Ada kemungkinan kamu menyimpan luka batin yang belum sembuh. Mungkin kamu sering merasa 'baik-baik saja' di luar, tapi di dalam menyimpan perasaan yang belum sempat diproses.`;
       } else if (total >= 50) {
-        hasil = "Hasil ini menunjukkan luka batin cukup dalam yang mempengaruhi hidup, hubungan, dan jati dirimu saat ini. Sangat disarankan untuk mendapatkan bantuan profesional agar kamu bisa pulih dan berkembang secara utuh.";
+        hasil = `Halo, ${nama}! Hasil ini menunjukkan luka batin cukup dalam yang mempengaruhi hidup, hubungan, dan jati dirimu saat ini. Sangat disarankan untuk mendapatkan bantuan profesional agar kamu bisa pulih dan berkembang secara utuh.`;
       }
 
       document.getElementById("result").innerHTML = `<strong>Total Skor: ${total}</strong><br/>${hasil}`;
       document.getElementById("result").style.display = "block";
+      document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
     }
   </script>
 </body>
